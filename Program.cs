@@ -12,11 +12,11 @@ public static class Program
         {
             SynchronizationContext.SetSynchronizationContext(syncContext);
         
-            Console.WriteLine($"{Environment.CurrentManagedThreadId}: BeforeAwait");
+            Console.WriteLine($"{Environment.CurrentManagedThreadId}: BeforeAwait"); // Y: BeforeAwait
             
             await Task.Delay(1000).ConfigureAwait(true);
             
-            Console.WriteLine($"{Environment.CurrentManagedThreadId}: AfterAwait");
+            Console.WriteLine($"{Environment.CurrentManagedThreadId}: AfterAwait"); // X: AfterAwait
         });
 
         syncContext.StartSyncContextWorker();
@@ -28,14 +28,14 @@ public static class Program
         
         public override void Post(SendOrPostCallback d, object? state)
         {
-            Console.WriteLine($"{Environment.CurrentManagedThreadId}: Post");
+            Console.WriteLine($"{Environment.CurrentManagedThreadId}: Post"); // Y: Post
             
             _queue.Enqueue(() => d.Invoke(state));
         }
     
         public void StartSyncContextWorker()
         {
-            Console.WriteLine($"{Environment.CurrentManagedThreadId}: StartSyncContextWorker");
+            Console.WriteLine($"{Environment.CurrentManagedThreadId}: StartSyncContextWorker"); // X: StartSyncContextWorker
             
             while (true)
             {
